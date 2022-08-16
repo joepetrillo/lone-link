@@ -23,6 +23,11 @@ export const authOptions: NextAuthOptions = {
       from: env.EMAIL_FROM,
     }),
   ],
+  pages: {
+    signIn: "/auth/signin",
+    signOut: "/auth/signout",
+    verifyRequest: "/auth/verify-email",
+  },
   theme: {
     colorScheme: "light",
   },

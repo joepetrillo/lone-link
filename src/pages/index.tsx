@@ -40,7 +40,7 @@ const Home: NextPage = () => {
           ) : !session ? (
             <>
               <p>You are not signed in</p>
-              <Link href="/api/auth/signin">
+              <Link href="/auth/signin">
                 <a className="rounded-lg px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center">
                   Sign In
                 </a>
@@ -49,11 +49,18 @@ const Home: NextPage = () => {
           ) : (
             <>
               <p>You are signed in as {`${session.user?.email}`}</p>
-              <Link href="/api/auth/signout">
-                <a className="rounded-lg px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center">
-                  Sign Out
-                </a>
-              </Link>
+              <div className="flex gap-5">
+                <Link href="/dashboard">
+                  <a className="rounded-lg px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center">
+                    Dashboard
+                  </a>
+                </Link>
+                <Link href="/auth/signout">
+                  <a className="rounded-lg px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center">
+                    Sign Out
+                  </a>
+                </Link>
+              </div>
             </>
           )}
         </div>
