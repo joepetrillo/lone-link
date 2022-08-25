@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { signOut } from "next-auth/react";
-import { MouseEventHandler, useState } from "react";
+import { useState } from "react";
 
 const SignOut: NextPage = () => {
   const [loading, setLoading] = useState(false);

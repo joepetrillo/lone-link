@@ -16,6 +16,17 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  events: {
+    createUser: async (message) => {
+      // set default image
+      await prisma.user.update({
+        where: {
+          id: message.user.id,
+        },
+        data: { image: "https://i.imgur.com/6VigAlo.png" },
+      });
+    },
+  },
   adapter: PrismaAdapter(prisma),
   providers: [
     Email({
@@ -27,6 +38,7 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
     verifyRequest: "/auth/verify-email",
+    newUser: "/auth/setup-profile",
   },
   theme: {
     colorScheme: "light",

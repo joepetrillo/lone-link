@@ -10,12 +10,11 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Linktree Clone</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Lone Link</title>
       </Head>
 
       <main className="flex flex-col gap-10 items-center justify-center min-h-screen text-slate-700 text-lg">
-        <h1 className="text-5xl md:text-7xl font-extrabold">LinkTree Clone</h1>
+        <h1 className="text-5xl md:text-7xl font-extrabold">Lone Link</h1>
 
         <div className="h-[100px] flex items-center justify-center flex-col gap-5">
           {status === "loading" ? (
