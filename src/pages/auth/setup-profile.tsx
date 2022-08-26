@@ -7,9 +7,10 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import z from "zod";
 
 const VerifyEmail: NextPage = () => {
-  const [username, setUsername] = useState<string>("");
+  const [username, setUsername] = useState("");
   const [error, setError] = useState<string | undefined>();
-  const { data: session } = useSession();
+
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -99,6 +100,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     context.res,
     nextAuthOptions
   );
+
+  console.log("SETUP SESSION = ", session);
 
   if (session?.user?.name !== null && session?.user?.name !== "") {
     return {

@@ -7,9 +7,9 @@ import { env } from "../../../env/server.mjs";
 import Email from "next-auth/providers/email";
 
 export const authOptions: NextAuthOptions = {
-  // Include user.id on session
   callbacks: {
     session({ session, user }) {
+      // add user id to session
       if (session.user) {
         session.user.id = user.id;
       }

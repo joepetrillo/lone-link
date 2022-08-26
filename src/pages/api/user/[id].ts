@@ -48,7 +48,12 @@ const user = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         });
 
-        if (usernameTaken) {
+        if (
+          usernameTaken ||
+          parsedData.name === "dashboard" ||
+          parsedData.name === "auth" ||
+          parsedData.name === "api"
+        ) {
           res.status(404).json({ error: "That username is already taken" });
           break;
         }
