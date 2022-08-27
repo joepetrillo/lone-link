@@ -4,7 +4,7 @@ import { authOptions as nextAuthOptions } from "./api/auth/[...nextauth]";
 import { useSession } from "next-auth/react";
 
 const Dashboard: NextPage = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
 
   return (
     <div className="flex flex-col gap-10 items-center justify-center min-h-screen text-slate-700 text-lg">
@@ -20,8 +20,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     context.res,
     nextAuthOptions
   );
-
-  console.log("DASHBOARD SESSION = ", session);
 
   if (session?.user?.name) {
     return {

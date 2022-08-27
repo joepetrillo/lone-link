@@ -9,8 +9,7 @@ import z from "zod";
 const VerifyEmail: NextPage = () => {
   const [username, setUsername] = useState("");
   const [error, setError] = useState<string | undefined>();
-
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -57,6 +56,9 @@ const VerifyEmail: NextPage = () => {
         return;
       }
 
+      const event = new Event("visibilitychange");
+      document.dispatchEvent(event);
+
       router.push("/dashboard");
     }
   }
@@ -100,8 +102,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     context.res,
     nextAuthOptions
   );
-
-  console.log("SETUP SESSION = ", session);
 
   if (session?.user?.name !== null && session?.user?.name !== "") {
     return {
