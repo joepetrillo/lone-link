@@ -2,16 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../server/db/client";
 import z from "zod";
 
-const validBody = z.object({
-  name: z
-    .string()
-    .min(3)
-    .max(20)
-    .regex(/^[a-z0-9]+$/)
-    .optional(),
-  image: z.string().url().optional(),
-});
-
 const user = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query as { id: string };
 
@@ -23,19 +13,30 @@ const user = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ error: "User Not Found" });
+      if (!user) {
+        res.status(404).json({ error: "User not found" });
+        return;
       }
+
+      res.status(200).json(user);
 
       break;
 
     case "PATCH":
+      const validBody = z.object({
+        name: z
+          .string()
+          .min(3)
+          .max(20)
+          .regex(/^[a-z0-9]+$/)
+          .optional(),
+        image: z.string().url().optional(),
+      });
+
       const validation = validBody.safeParse(req.body);
 
       if (!validation.success) {
-        res.status(400).json({ error: "Incorrect Body Shape" });
+        res.status(400).json({ error: "Incorrect body shape" });
         break;
       }
 
@@ -54,28 +55,30 @@ const user = async (req: NextApiRequest, res: NextApiResponse) => {
           parsedData.name === "auth" ||
           parsedData.name === "api"
         ) {
-          res.status(404).json({ error: "That username is already taken" });
+          res.status(400).json({ error: "That username is already taken" });
           break;
         }
       }
 
-      const updatedUser = await prisma.user.update({
-        where: {
-          id: id,
-        },
-        data: { name: parsedData.name, image: parsedData.image },
-      });
+      try {
+        const updatedUser = await prisma.user.update({
+          where: {
+            id: id,
+          },
+          data: { name: parsedData.name, image: parsedData.image },
+        });
 
-      if (updatedUser) {
         res.status(200).json(updatedUser);
-      } else {
-        res.status(404).json({ error: "User Not Found" });
+      } catch (error) {
+        res
+          .status(400)
+          .json({ error: "There was an error while updating the user" });
       }
 
       break;
 
     default:
-      res.status(405).json({ error: "Method Not Allowed" });
+      res.status(405).json({ error: "Method not allowed" });
       break;
   }
 };

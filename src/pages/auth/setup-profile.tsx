@@ -21,7 +21,7 @@ const VerifyEmail: NextPage = () => {
       const validUsername = z
         .string()
         .regex(/^[a-z0-9]+$/, {
-          message: "Usernames must contain only letters and numbers",
+          message: "Usernames must contain only lowercase letters and numbers",
         })
         .min(3, { message: "Usernames must be at least 3 characters" })
         .max(20, { message: "Usernames cannot be more than 20 characters" });
@@ -56,8 +56,16 @@ const VerifyEmail: NextPage = () => {
         return;
       }
 
+      // trigger new session refresh
       const event = new Event("visibilitychange");
       document.dispatchEvent(event);
+
+      // const result = await getSession({
+      //   broadcast: true,
+      //   event: "storage",
+      //   triggerEvent: true,
+      // });
+      // console.log(result);
 
       router.push("/dashboard");
     }
@@ -68,7 +76,7 @@ const VerifyEmail: NextPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col gap-5 justify-center items-center text-lg text-slate-700">
+    <div className="min-h-screen flex flex-col gap-5 justify-center items-center text-lg text-slate-800">
       <h1 className="text-5xl md:text-7xl font-extrabold">Almost Done</h1>
       <form
         className="flex flex-col gap-5 items-center"
