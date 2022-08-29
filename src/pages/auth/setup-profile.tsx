@@ -3,11 +3,13 @@ import { useRouter } from "next/router";
 import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
 import { useSession } from "next-auth/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import z from "zod";
+import Spinner from "../../components/Spinner";
 
 const VerifyEmail: NextPage = () => {
   const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const { data: session } = useSession();
   const router = useRouter();
@@ -36,43 +38,44 @@ const VerifyEmail: NextPage = () => {
       // if we make it here, we have a valid username syntax!
       // now we must attempt to update the username on the server, but the username might already be taken
 
-      const response = await fetch(
-        `http://localhost:3000/api/user/${session?.user?.id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: username,
-          }),
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `http://localhost:3000/api/user/${session?.user?.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: username,
+            }),
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setError(data.error);
+          setLoading(false);
+          return;
         }
-      );
 
-      const data = await response.json();
-
-      if (data.error) {
-        setError(data.error);
-        return;
+        // trigger new session refresh (IMPORTANT) and go to dashboard
+        const event = new Event("visibilitychange");
+        document.dispatchEvent(event);
+        router.push("/dashboard");
+      } catch (error) {
+        setError("There was an error reaching the server");
+        setLoading(false);
       }
-
-      // trigger new session refresh
-      const event = new Event("visibilitychange");
-      document.dispatchEvent(event);
-
-      // const result = await getSession({
-      //   broadcast: true,
-      //   event: "storage",
-      //   triggerEvent: true,
-      // });
-      // console.log(result);
-
-      router.push("/dashboard");
     }
-  }
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setUsername(e.currentTarget.value.toLowerCase());
+    // const result = await getSession({
+    //   broadcast: true,
+    //   event: "storage",
+    //   triggerEvent: true,
+    // });
   }
 
   return (
@@ -91,14 +94,18 @@ const VerifyEmail: NextPage = () => {
               type="text"
               className="bg-transparent outline-none pl-0.5"
               placeholder="username"
-              onChange={handleChange}
+              onChange={(e) => setUsername(e.currentTarget.value)}
             />
           </div>
         </div>
         {error && <p className="text-red-500">{error}</p>}
-        <button className="rounded-lg px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center">
-          Finish
-        </button>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <button className="rounded-lg px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center">
+            Finish
+          </button>
+        )}
       </form>
     </div>
   );

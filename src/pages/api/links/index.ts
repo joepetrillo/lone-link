@@ -89,9 +89,6 @@ const privateLinks = async (req: NextApiRequest, res: NextApiResponse) => {
 
         break;
 
-      case "PATCH":
-        break;
-
       case "DELETE":
         const deleteLinkValidation = validateDelete(req.body);
 

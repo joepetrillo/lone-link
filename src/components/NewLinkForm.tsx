@@ -154,7 +154,7 @@ const NewLinkForm = ({ linkCount, setError, setLinks }: NewLinkFormProps) => {
               </div>
             ) : (
               <button className="w-full rounded-lg px-3 py-2 bg-green-300 hover:bg-green-400 text-center">
-                Submit
+                Add Link
               </button>
             )}
           </form>

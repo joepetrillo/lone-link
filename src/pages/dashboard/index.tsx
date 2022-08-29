@@ -22,15 +22,20 @@ const Dashboard: NextPage = () => {
 
   useEffect(() => {
     const loadLinks = async () => {
-      // get all links from server that the logged in user owns
-      const response = await fetch(`http://localhost:3000/api/links`);
+      try {
+        const response = await fetch(`http://localhost:3000/api/links`);
 
-      if (response.ok) {
-        const data = await response.json();
-        setLinks(data);
-        setLoading(false);
-      } else {
-        setError("There was an error retrieving your links");
+        const allLinks = await response.json();
+
+        if (!response.ok) {
+          setError(allLinks.error);
+          return;
+        }
+
+        setLinks(allLinks);
+      } catch (error) {
+        setError("There was an error reaching the server");
+      } finally {
         setLoading(false);
       }
     };
