@@ -2,13 +2,12 @@ import type { NextPage } from "next";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import Spinner from "../../components/Spinner";
-import { env } from "../../env/client.mjs";
 
 const SignOut: NextPage = () => {
   const [loading, setLoading] = useState(false);
 
   function handleSubmit() {
-    signOut({ callbackUrl: `${env.NEXT_PUBLIC_API_URL}` });
+    signOut({ callbackUrl: `/` });
     setLoading(true);
   }
 

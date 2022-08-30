@@ -8,7 +8,6 @@ import Spinner from "../../components/Spinner";
 import DashboardLink from "../../components/DashboardLink";
 import NewLinkForm from "../../components/NewLinkForm";
 import Link from "next/link";
-import { env } from "../../env/client.mjs";
 
 interface DashboardLinkData {
   id: string;
@@ -25,7 +24,7 @@ const Dashboard: NextPage = () => {
   useEffect(() => {
     const loadLinks = async () => {
       try {
-        const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/api/links`);
+        const response = await fetch(`/api/links`);
 
         const allLinks = await response.json();
 

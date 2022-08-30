@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import Spinner from "./Spinner";
-import { env } from "../env/client.mjs";
 
 interface DashboardLinkData {
   id: string;
@@ -23,7 +22,7 @@ const DashboardLink = ({ id, title, url, setLinks }: DashboardLinkProps) => {
   async function handleDelete() {
     setLoading(true);
     try {
-      const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/api/links`, {
+      const response = await fetch(`/api/links`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
