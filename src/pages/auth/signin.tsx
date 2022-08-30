@@ -2,6 +2,7 @@ import { NextPage } from "next";
 import { signIn } from "next-auth/react";
 import { FormEvent, useState } from "react";
 import Spinner from "../../components/Spinner";
+import { env } from "../../env/client.mjs";
 
 const SignIn: NextPage = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const SignIn: NextPage = () => {
     if (email !== "") {
       signIn("email", {
         email: email,
-        callbackUrl: "https://lone.link/dashboard",
+        callbackUrl: `${env.NEXT_PUBLIC_API_URL}/dashboard`,
       });
       setLoading(true);
     }

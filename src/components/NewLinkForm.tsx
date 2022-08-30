@@ -1,6 +1,7 @@
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { z } from "zod";
 import Spinner from "./Spinner";
+import { env } from "../env/client.mjs";
 
 interface DashboardLinkData {
   id: string;
@@ -70,7 +71,7 @@ const NewLinkForm = ({ linkCount, setError, setLinks }: NewLinkFormProps) => {
 
     setLoading(true);
     try {
-      const response = await fetch(`https://lone.link/api/links`, {
+      const response = await fetch(`${env.NEXT_PUBLIC_API_URL}/api/links`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

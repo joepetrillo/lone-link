@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import { FormEvent, useState } from "react";
 import z from "zod";
 import Spinner from "../../components/Spinner";
+import { env } from "../../env/client.mjs";
 
 const VerifyEmail: NextPage = () => {
   const [username, setUsername] = useState("");
@@ -41,7 +42,7 @@ const VerifyEmail: NextPage = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `https://lone.link/api/user/${session?.user?.id}`,
+          `${env.NEXT_PUBLIC_API_URL}/api/user/${session?.user?.id}`,
           {
             method: "PATCH",
             headers: {
