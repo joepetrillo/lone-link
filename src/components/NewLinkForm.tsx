@@ -105,14 +105,32 @@ const NewLinkForm = ({ linkCount, setError, setLinks }: NewLinkFormProps) => {
       <div className="flex justify-between items-center mb-5">
         <span>{`${linkCount}/5 Links`}</span>
         <button
-          className={`rounded-lg px-3 py-2 text-center ${
+          className={`rounded-md px-3 py-2 text-center ${
             showForm
-              ? "bg-red-300 hover:bg-red-400"
-              : "bg-green-300 hover:bg-green-400"
+              ? "bg-red-300 hover:bg-red-400 border-2 border-red-400"
+              : "bg-green-300 hover:bg-green-400 border-2 border-green-400"
           }`}
           onClick={() => setShowForm(!showForm)}
         >
-          {showForm ? "Cancel" : "New Link"}
+          {showForm ? (
+            "Cancel"
+          ) : (
+            <div className="flex items-center gap-2">
+              <span>New Link</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-7 h-7"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M19.902 4.098a3.75 3.75 0 00-5.304 0l-4.5 4.5a3.75 3.75 0 001.035 6.037.75.75 0 01-.646 1.353 5.25 5.25 0 01-1.449-8.45l4.5-4.5a5.25 5.25 0 117.424 7.424l-1.757 1.757a.75.75 0 11-1.06-1.06l1.757-1.757a3.75 3.75 0 000-5.304zm-7.389 4.267a.75.75 0 011-.353 5.25 5.25 0 011.449 8.45l-4.5 4.5a5.25 5.25 0 11-7.424-7.424l1.757-1.757a.75.75 0 111.06 1.06l-1.757 1.757a3.75 3.75 0 105.304 5.304l4.5-4.5a3.75 3.75 0 00-1.035-6.037.75.75 0 01-.354-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          )}
         </button>
       </div>
       {showForm && (
@@ -126,7 +144,7 @@ const NewLinkForm = ({ linkCount, setError, setLinks }: NewLinkFormProps) => {
                 )}
               </div>
               <input
-                className="w-full rounded-md p-2 bg-gray-200 hover:bg-gray-300"
+                className="w-full rounded-md p-3 bg-slate-200 hover:bg-slate-300 placeholder:text-slate-500 focus:bg-slate-300 border-2 border-slate-300"
                 type="text"
                 placeholder="Personal Website"
                 onChange={(e) => setTitle(e.currentTarget.value)}
@@ -141,7 +159,7 @@ const NewLinkForm = ({ linkCount, setError, setLinks }: NewLinkFormProps) => {
                 )}
               </div>
               <input
-                className="w-full rounded-md p-2 bg-gray-200 hover:bg-gray-300"
+                className="w-full rounded-md p-3 bg-slate-200 hover:bg-slate-300 placeholder:text-slate-500 focus:bg-slate-300 border-2 border-slate-300"
                 type="text"
                 placeholder="https://jpetrillo.com/"
                 onChange={(e) => setUrl(e.currentTarget.value)}
@@ -153,7 +171,7 @@ const NewLinkForm = ({ linkCount, setError, setLinks }: NewLinkFormProps) => {
                 <Spinner />
               </div>
             ) : (
-              <button className="w-full rounded-lg px-3 py-2 bg-green-300 hover:bg-green-400 text-center">
+              <button className="w-full rounded-md px-3 py-2 text-center bg-green-300 hover:bg-green-400 border-2 border-green-400">
                 Add Link
               </button>
             )}

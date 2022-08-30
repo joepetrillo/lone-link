@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { signIn } from "next-auth/react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import Spinner from "../../components/Spinner";
 
 const SignIn: NextPage = () => {
@@ -17,40 +17,39 @@ const SignIn: NextPage = () => {
       setLoading(true);
     }
   }
+  return (
+    <div className="min-h-screen flex justify-center items-center px-4 text-lg text-slate-800">
+      <div className="bg-slate-50 p-6 rounded-md w-full max-w-screen-sm border-2 border-slate-200">
+        <h1 className="text-6xl md:text-7xl font-extrabold text-center mb-10">
+          Lone Link
+        </h1>
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
-    setEmail(e.currentTarget.value);
-  }
-
-  if (loading === false) {
-    return (
-      <div className="min-h-screen flex flex-col gap-5 justify-center items-center text-lg text-slate-800">
-        <form
-          className="flex flex-col gap-5 items-center"
-          onSubmit={handleSubmit}
-        >
-          <label className="flex flex-col gap-3 items-center">
-            <span>Enter Your Email</span>
-            <input
-              className="rounded-lg p-3 bg-gray-200 text-center border-2 border-slate-700"
-              type="email"
-              placeholder="email address"
-              onChange={handleChange}
-            />
-          </label>
-          <button className="rounded-lg px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center">
-            Sign In
-          </button>
-        </form>
+        <div className="min-h-[180px] flex justify-center items-center flex-col gap-5 mb-10">
+          {loading ? (
+            <Spinner />
+          ) : (
+            <>
+              <p>Enter Your Email Address</p>
+              <form
+                onSubmit={handleSubmit}
+                className="flex flex-col gap-5 justify-center items-center"
+              >
+                <input
+                  className="rounded-md p-3 bg-slate-200 hover:bg-slate-300 placeholder:text-slate-500 focus:bg-slate-300 border-2 border-slate-300"
+                  type="email"
+                  placeholder="Email Address"
+                  onChange={(e) => setEmail(e.currentTarget.value)}
+                />
+                <button className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center">
+                  Sign In
+                </button>
+              </form>
+            </>
+          )}
+        </div>
       </div>
-    );
-  } else {
-    return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-lg text-slate-800">
-        <Spinner />
-      </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default SignIn;

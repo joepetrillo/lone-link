@@ -11,25 +11,31 @@ const SignOut: NextPage = () => {
     setLoading(true);
   }
 
-  if (loading === false) {
-    return (
-      <div className="min-h-screen flex flex-col gap-5 justify-center items-center text-lg text-slate-800">
-        <p>Are you sure you want to sign out?</p>
-        <button
-          className="rounded-lg px-6 py-3 bg-gray-200 hover:bg-gray-300 text-center"
-          onClick={handleSubmit}
-        >
-          Sign Out
-        </button>
+  return (
+    <div className="min-h-screen flex justify-center items-center px-4 text-lg text-slate-800">
+      <div className="bg-slate-50 p-6 rounded-md w-full max-w-screen-sm border-2 border-slate-200">
+        <h1 className="text-6xl md:text-7xl font-extrabold text-center mb-10">
+          Lone Link
+        </h1>
+
+        <div className="min-h-[180px] flex justify-center items-center flex-col gap-5 mb-10">
+          {loading ? (
+            <Spinner />
+          ) : (
+            <>
+              <p>Are you sure you want to sign out?</p>
+              <button
+                onClick={handleSubmit}
+                className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
+              >
+                Sign Out
+              </button>
+            </>
+          )}
+        </div>
       </div>
-    );
-  } else {
-    return (
-      <div className="min-h-screen flex flex-col justify-center items-center text-lg text-slate-800">
-        <Spinner />
-      </div>
-    );
-  }
+    </div>
+  );
 };
 
 export default SignOut;

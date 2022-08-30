@@ -36,7 +36,7 @@ const PublicUserPage: NextPage = ({ user, links }: PublicUserPageProps) => {
         </div>
       ) : (
         <main className="min-h-screen flex justify-center items-center">
-          <p>This user does not exist</p>
+          <p>That user does not exist.</p>
         </main>
       )}
     </div>
