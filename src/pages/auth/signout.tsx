@@ -7,7 +7,7 @@ const SignOut: NextPage = () => {
   const [loading, setLoading] = useState(false);
 
   function handleSubmit() {
-    signOut({ callbackUrl: "http://localhost:3000" });
+    signOut({ callbackUrl: "https://lone.link" });
     setLoading(true);
   }
 

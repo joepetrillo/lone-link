@@ -12,7 +12,7 @@ const SignIn: NextPage = () => {
     if (email !== "") {
       signIn("email", {
         email: email,
-        callbackUrl: "http://localhost:3000/dashboard",
+        callbackUrl: "https://lone.link/dashboard",
       });
       setLoading(true);
     }

@@ -22,7 +22,7 @@ const DashboardLink = ({ id, title, url, setLinks }: DashboardLinkProps) => {
   async function handleDelete() {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:3000/api/links`, {
+      const response = await fetch(`https://lone.link/api/links`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

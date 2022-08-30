@@ -41,7 +41,7 @@ const VerifyEmail: NextPage = () => {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:3000/api/user/${session?.user?.id}`,
+          `https://lone.link/api/user/${session?.user?.id}`,
           {
             method: "PATCH",
             headers: {
