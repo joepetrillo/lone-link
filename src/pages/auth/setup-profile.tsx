@@ -1,11 +1,12 @@
+import { FormEvent, useState } from "react";
 import type { GetServerSideProps, NextPage } from "next";
-import { useRouter } from "next/router";
+
+import Spinner from "../../components/Spinner";
 import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
+import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-import { FormEvent, useState } from "react";
 import z from "zod";
-import Spinner from "../../components/Spinner";
 
 const VerifyEmail: NextPage = () => {
   const [username, setUsername] = useState("");

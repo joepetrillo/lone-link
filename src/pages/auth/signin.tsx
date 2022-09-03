@@ -1,7 +1,8 @@
-import { NextPage } from "next";
-import { signIn } from "next-auth/react";
 import { FormEvent, useState } from "react";
+
+import { NextPage } from "next";
 import Spinner from "../../components/Spinner";
+import { signIn } from "next-auth/react";
 
 const SignIn: NextPage = () => {
   const [email, setEmail] = useState("");

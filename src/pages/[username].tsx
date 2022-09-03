@@ -1,7 +1,8 @@
 import type { GetServerSideProps, NextPage } from "next";
-import { prisma } from "../server/db/client";
+
 import Image from "next/image";
 import PublicLink from "../components/PublicLink";
+import { prisma } from "../server/db/client";
 
 interface PublicUserPageProps {
   user?: {

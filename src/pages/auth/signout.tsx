@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
+import Spinner from "../../components/Spinner";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
-import Spinner from "../../components/Spinner";
 
 const SignOut: NextPage = () => {
   const [loading, setLoading] = useState(false);
