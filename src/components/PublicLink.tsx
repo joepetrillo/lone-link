@@ -9,7 +9,7 @@ const PublicLink = ({ title, url }: PublicLinkProps) => {
       href={url}
       target="_blank"
       rel="noreferrer"
-      className="block mb-5 w-full text-center rounded-md p-4 bg-slate-50 hover:bg-slate-200 placeholder:text-slate-500 focus:bg-slate-300 border-2 border-slate-200"
+      className="block mb-5 last:mb-0 text-center rounded-md p-4 bg-slate-50 hover:bg-slate-200 border-2 border-slate-200"
     >
       {title}
     </a>

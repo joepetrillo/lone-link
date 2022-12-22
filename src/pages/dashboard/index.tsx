@@ -1,6 +1,5 @@
 import type { GetServerSideProps, NextPage } from "next";
 import { useEffect, useState } from "react";
-
 import DashboardLink from "../../components/DashboardLink";
 import Image from "next/image";
 import Link from "next/link";
@@ -55,7 +54,6 @@ const Dashboard: NextPage = () => {
               height={60}
               src={session?.user?.image as string}
               alt="profile picture"
-              layout="fixed"
             />
           </div>
           <div className="flex flex-col">
@@ -68,10 +66,11 @@ const Dashboard: NextPage = () => {
             >{`lone.link/${session?.user?.name}`}</a>
           </div>
         </div>
-        <Link href="/auth/signout">
-          <a className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center shrink-0">
-            Sign Out
-          </a>
+        <Link
+          href="/auth/signout"
+          className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center shrink-0"
+        >
+          Sign Out
         </Link>
       </div>
       <main>
@@ -88,7 +87,7 @@ const Dashboard: NextPage = () => {
               linkCount={links.length}
             />
             {!links.length ? (
-              <p className="text-center">You have no links!</p>
+              <p className="text-center">You have no links yet!</p>
             ) : (
               links.map(({ id, title, url }) => {
                 return (

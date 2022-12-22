@@ -1,6 +1,4 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
-
-// Prisma adapter for NextAuth
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "../../../server/db/client";
 import { env } from "../../../env/server.mjs";

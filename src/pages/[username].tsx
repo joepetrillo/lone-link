@@ -1,21 +1,24 @@
 import type { GetServerSideProps, NextPage } from "next";
-
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import PublicLink from "../components/PublicLink";
 import { prisma } from "../server/db/client";
 
 interface PublicUserPageProps {
-  user?: {
+  user: {
     name: string;
     image: string;
   } | null;
-  links?: Array<{
+  links: Array<{
     title: string;
     url: string;
   }>;
 }
 
-const PublicUserPage: NextPage = ({ user, links }: PublicUserPageProps) => {
+const PublicUserPage: NextPage<PublicUserPageProps> = ({ user, links }) => {
+  const router = useRouter();
+
   return (
     <div className="text-lg text-slate-800">
       {user ? (
@@ -36,8 +39,14 @@ const PublicUserPage: NextPage = ({ user, links }: PublicUserPageProps) => {
           </main>
         </div>
       ) : (
-        <main className="min-h-screen flex justify-center items-center">
-          <p>That user does not exist.</p>
+        <main className="min-h-screen flex flex-col justify-center items-center">
+          <p>The page for @{router.query.username} does not exist.</p>
+          <p>
+            <Link href="/auth/signin" className="underline">
+              Sign up
+            </Link>{" "}
+            to claim it now.
+          </p>
         </main>
       )}
     </div>

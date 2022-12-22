@@ -1,14 +1,15 @@
-import { FormEvent, useState } from "react";
-import type { GetServerSideProps, NextPage } from "next";
-
+import { FormEvent, ReactElement, useState } from "react";
+import type { GetServerSideProps } from "next";
 import Spinner from "../../components/Spinner";
 import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import z from "zod";
+import { NextPageWithLayout } from "../_app";
+import CardLayout from "../../components/CardLayout";
 
-const VerifyEmail: NextPage = () => {
+const VerifyEmail: NextPageWithLayout = () => {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -77,49 +78,49 @@ const VerifyEmail: NextPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center px-4 text-lg text-slate-800">
-      <div className="bg-slate-50 p-6 rounded-md w-full max-w-screen-sm border-2 border-slate-200">
-        <h1 className="text-6xl md:text-7xl font-extrabold text-center mb-10">
-          Almost Done
-        </h1>
+    <>
+      <h1 className="text-6xl md:text-7xl font-extrabold text-center mb-10">
+        Almost Done
+      </h1>
 
-        <div className="min-h-[180px] flex justify-center items-center flex-col gap-5 mb-10">
-          {error && (
-            <p className="text-red-500 text-center text-base">{error}</p>
-          )}
-          {loading ? (
-            <Spinner />
-          ) : (
-            <>
-              <p>Enter Desired Username</p>
-              <form
-                onSubmit={handleSubmit}
-                className="flex flex-col gap-5 justify-center items-center"
-              >
-                <div className="rounded-md p-3 bg-slate-200 border-2 border-slate-300 max-w-[278.33px]">
-                  <div className="flex items-center">
-                    <label htmlFor="username">lone.link/</label>
-                    <input
-                      id="username"
-                      type="text"
-                      className="w-full bg-transparent rounded-md outline-none ml-0.5 pl-0.5 bg-slate-200 hover:bg-slate-300 placeholder:text-slate-500 focus:bg-slate-300"
-                      placeholder="username"
-                      onChange={(e) =>
-                        setUsername(e.currentTarget.value.toLowerCase())
-                      }
-                    />
-                  </div>
+      <div className="min-h-[180px] flex justify-center items-center flex-col gap-5 mb-10">
+        {error && <p className="text-red-500 text-center text-base">{error}</p>}
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <p>Enter Desired Username</p>
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col gap-5 justify-center items-center"
+            >
+              <div className="rounded-md p-3 bg-slate-200 border-2 border-slate-300 max-w-[278.33px]">
+                <div className="flex items-center">
+                  <label htmlFor="username">lone.link/</label>
+                  <input
+                    id="username"
+                    type="text"
+                    className="w-full bg-transparent rounded-md outline-none ml-0.5 pl-0.5 bg-slate-200 hover:bg-slate-300 placeholder:text-slate-500 focus:bg-slate-300"
+                    placeholder="username"
+                    onChange={(e) =>
+                      setUsername(e.currentTarget.value.toLowerCase())
+                    }
+                  />
                 </div>
-                <button className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center">
-                  Finish
-                </button>
-              </form>
-            </>
-          )}
-        </div>
+              </div>
+              <button className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center">
+                Finish
+              </button>
+            </form>
+          </>
+        )}
       </div>
-    </div>
+    </>
   );
+};
+
+VerifyEmail.getLayout = function getLayout(page: ReactElement) {
+  return <CardLayout>{page}</CardLayout>;
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

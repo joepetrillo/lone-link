@@ -1,14 +1,24 @@
 import "../styles/globals.css";
-
-import type { AppType } from "next/dist/shared/lib/utils";
 import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
+import type { NextPage } from "next";
+import { Session } from "next-auth";
+import { ReactElement, ReactNode } from "react";
 
-const MyApp: AppType = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
-  return (
-    <SessionProvider session={session}>
+/* prettier-ignore */
+export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps<{ session: Session }> & {
+  Component: NextPageWithLayout;
+};
+
+const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  return getLayout(
+    <SessionProvider session={pageProps.session}>
       <Component {...pageProps} />
     </SessionProvider>
   );

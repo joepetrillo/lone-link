@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-
 import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../auth/[...nextauth]";
 import { prisma } from "../../../server/db/client";
@@ -29,7 +28,7 @@ function validateDelete(body: NextApiRequest["body"]) {
 const privateLinks = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, nextAuthOptions);
 
-  if (session?.user) {
+  if (session?.user?.id) {
     switch (req.method) {
       case "POST":
         const newLinkValidation = validatePost(req.body);
@@ -69,7 +68,7 @@ const privateLinks = async (req: NextApiRequest, res: NextApiResponse) => {
       case "GET":
         const links = await prisma.link.findMany({
           where: {
-            userId: session?.user?.id,
+            userId: session.user.id,
           },
         });
 
