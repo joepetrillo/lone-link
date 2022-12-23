@@ -18,6 +18,7 @@ const SignIn: NextPageWithLayout = () => {
       setLoading(true);
     }
   }
+
   return (
     <>
       <h1 className="text-6xl md:text-7xl font-extrabold text-center mb-10">
@@ -40,7 +41,7 @@ const SignIn: NextPageWithLayout = () => {
                 placeholder="Email Address"
                 onChange={(e) => setEmail(e.currentTarget.value)}
               />
-              <button className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center">
+              <button className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center">
                 Sign In
               </button>
             </form>

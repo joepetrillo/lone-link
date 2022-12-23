@@ -4,7 +4,6 @@ import Spinner from "../../components/Spinner";
 import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
 import { useRouter } from "next/router";
-import { useSession } from "next-auth/react";
 import z from "zod";
 import { NextPageWithLayout } from "../_app";
 import CardLayout from "../../components/CardLayout";
@@ -12,8 +11,7 @@ import CardLayout from "../../components/CardLayout";
 const VerifyEmail: NextPageWithLayout = () => {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-  const { data: session } = useSession();
+  const [error, setError] = useState<string>();
   const router = useRouter();
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -42,7 +40,7 @@ const VerifyEmail: NextPageWithLayout = () => {
 
       try {
         setLoading(true);
-        const response = await fetch(`/api/user/${session?.user?.id}`, {
+        const response = await fetch(`/api/profile`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -108,7 +106,7 @@ const VerifyEmail: NextPageWithLayout = () => {
                   />
                 </div>
               </div>
-              <button className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center">
+              <button className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center">
                 Finish
               </button>
             </form>

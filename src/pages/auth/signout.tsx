@@ -26,7 +26,7 @@ const SignOut: NextPageWithLayout = () => {
             <p>Are you sure you want to sign out?</p>
             <button
               onClick={handleSubmit}
-              className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
+              className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
             >
               Sign Out
             </button>

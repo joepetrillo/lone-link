@@ -1,7 +1,6 @@
 import type { GetServerSideProps, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import PublicLink from "../components/PublicLink";
 import { prisma } from "../server/db/client";
 
@@ -13,12 +12,10 @@ interface PublicUserPageProps {
   links: Array<{
     title: string;
     url: string;
-  }>;
+  }> | null;
 }
 
 const PublicUserPage: NextPage<PublicUserPageProps> = ({ user, links }) => {
-  const router = useRouter();
-
   return (
     <div className="text-lg text-slate-800">
       {user ? (
@@ -33,14 +30,19 @@ const PublicUserPage: NextPage<PublicUserPageProps> = ({ user, links }) => {
             <span>@{user.name}</span>
           </div>
           <main>
-            {links?.map(({ title, url }, index) => {
-              return <PublicLink key={index} title={title} url={url} />;
-            })}
+            {links &&
+              (links.length > 0 ? (
+                links.map(({ title, url }, index) => {
+                  return <PublicLink key={index} title={title} url={url} />;
+                })
+              ) : (
+                <p className="text-center">This user has no links</p>
+              ))}
           </main>
         </div>
       ) : (
-        <main className="min-h-screen flex flex-col justify-center items-center">
-          <p>The page for @{router.query.username} does not exist.</p>
+        <main className="min-h-screen flex flex-col justify-center items-center gap-2">
+          <p>This page does not exist.</p>
           <p>
             <Link href="/auth/signin" className="underline">
               Sign up
@@ -66,6 +68,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return {
       props: {
         user,
+        links: null,
       },
     };
   }
@@ -75,15 +78,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       userId: user.id,
     },
   });
-
-  if (links.length === 0) {
-    return {
-      props: {
-        user: { name: user.name, image: user.image },
-        links,
-      },
-    };
-  }
 
   return {
     props: {

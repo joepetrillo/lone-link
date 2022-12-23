@@ -25,7 +25,6 @@ const Dashboard: NextPage = () => {
     const loadLinks = async () => {
       try {
         const response = await fetch(`/api/links`);
-
         const allLinks = await response.json();
 
         if (!response.ok) {
@@ -87,7 +86,7 @@ const Dashboard: NextPage = () => {
               linkCount={links.length}
             />
             {!links.length ? (
-              <p className="text-center">You have no links yet!</p>
+              <p className="text-center">You have no links</p>
             ) : (
               links.map(({ id, title, url }) => {
                 return (

@@ -4,25 +4,11 @@ import { authOptions as nextAuthOptions } from "../auth/[...nextauth]";
 import { prisma } from "../../../server/db/client";
 import z from "zod";
 
-const user = async (req: NextApiRequest, res: NextApiResponse) => {
+const profile = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, nextAuthOptions);
-  const { id } = req.query as { id: string };
 
   if (session?.user?.id) {
     switch (req.method) {
-      case "GET":
-        const user = await prisma.user.findUnique({
-          where: {
-            id: id,
-          },
-        });
-        if (!user) {
-          res.status(404).json({ error: "User not found" });
-          return;
-        }
-        res.status(200).json(user);
-        break;
-
       case "PATCH":
         const validBody = z.object({
           name: z
@@ -58,7 +44,7 @@ const user = async (req: NextApiRequest, res: NextApiResponse) => {
         try {
           const updatedUser = await prisma.user.update({
             where: {
-              id: id,
+              id: session.user.id,
             },
             data: { name: parsedData.name, image: parsedData.image },
           });
@@ -81,4 +67,4 @@ const user = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default user;
+export default profile;

@@ -26,7 +26,7 @@ const Home: NextPageWithLayout = () => {
             <p>You are not signed in</p>
             <Link
               href="/auth/signin"
-              className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
+              className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
             >
               Sign In
             </Link>
@@ -37,13 +37,13 @@ const Home: NextPageWithLayout = () => {
             <div className="flex gap-5">
               <Link
                 href="/dashboard"
-                className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
+                className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
               >
                 Dashboard
               </Link>
               <Link
                 href="/auth/signout"
-                className="rounded-md px-6 py-3 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
+                className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center"
               >
                 Sign Out
               </Link>
