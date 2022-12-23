@@ -3,7 +3,6 @@ import Link from "next/link";
 import Spinner from "../components/Spinner";
 import { useSession } from "next-auth/react";
 import { NextPageWithLayout } from "./_app";
-import { ReactElement } from "react";
 import CardLayout from "../components/CardLayout";
 
 const Home: NextPageWithLayout = () => {
@@ -56,8 +55,6 @@ const Home: NextPageWithLayout = () => {
   );
 };
 
-Home.getLayout = function getLayout(page: ReactElement) {
-  return <CardLayout>{page}</CardLayout>;
-};
+Home.getLayout = (page) => <CardLayout>{page}</CardLayout>;
 
 export default Home;

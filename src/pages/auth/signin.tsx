@@ -1,4 +1,4 @@
-import { FormEvent, ReactElement, useState } from "react";
+import { FormEvent, useState } from "react";
 import Spinner from "../../components/Spinner";
 import { signIn } from "next-auth/react";
 import { NextPageWithLayout } from "../_app";
@@ -51,8 +51,6 @@ const SignIn: NextPageWithLayout = () => {
   );
 };
 
-SignIn.getLayout = function getLayout(page: ReactElement) {
-  return <CardLayout>{page}</CardLayout>;
-};
+SignIn.getLayout = (page) => <CardLayout>{page}</CardLayout>;
 
 export default SignIn;

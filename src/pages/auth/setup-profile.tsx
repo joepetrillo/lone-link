@@ -1,4 +1,4 @@
-import { FormEvent, ReactElement, useState } from "react";
+import { FormEvent, useState } from "react";
 import type { GetServerSideProps } from "next";
 import Spinner from "../../components/Spinner";
 import { unstable_getServerSession as getServerSession } from "next-auth";
@@ -119,9 +119,7 @@ const VerifyEmail: NextPageWithLayout = () => {
   );
 };
 
-VerifyEmail.getLayout = function getLayout(page: ReactElement) {
-  return <CardLayout>{page}</CardLayout>;
-};
+VerifyEmail.getLayout = (page) => <CardLayout>{page}</CardLayout>;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getServerSession(

@@ -1,6 +1,6 @@
 import Spinner from "../../components/Spinner";
 import { signOut } from "next-auth/react";
-import { ReactElement, useState } from "react";
+import { useState } from "react";
 import CardLayout from "../../components/CardLayout";
 import { NextPageWithLayout } from "../_app";
 
@@ -37,8 +37,6 @@ const SignOut: NextPageWithLayout = () => {
   );
 };
 
-SignOut.getLayout = function getLayout(page: ReactElement) {
-  return <CardLayout>{page}</CardLayout>;
-};
+SignOut.getLayout = (page) => <CardLayout>{page}</CardLayout>;
 
 export default SignOut;

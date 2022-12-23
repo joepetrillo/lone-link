@@ -38,9 +38,6 @@ export const authOptions: NextAuthOptions = {
     verifyRequest: "/auth/verify-email",
     newUser: "/auth/setup-profile",
   },
-  theme: {
-    colorScheme: "light",
-  },
 };
 
 export default NextAuth(authOptions);

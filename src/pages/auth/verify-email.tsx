@@ -1,4 +1,3 @@
-import { ReactElement } from "react";
 import CardLayout from "../../components/CardLayout";
 import { NextPageWithLayout } from "../_app";
 
@@ -17,8 +16,6 @@ const VerifyEmail: NextPageWithLayout = () => {
   );
 };
 
-VerifyEmail.getLayout = function getLayout(page: ReactElement) {
-  return <CardLayout>{page}</CardLayout>;
-};
+VerifyEmail.getLayout = (page) => <CardLayout>{page}</CardLayout>;
 
 export default VerifyEmail;
