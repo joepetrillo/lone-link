@@ -9,6 +9,21 @@ import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
 import { useSession } from "next-auth/react";
 
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+
 interface DashboardLinkData {
   id: string;
   title: string;
@@ -20,6 +35,19 @@ const Dashboard: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [links, setLinks] = useState<DashboardLinkData[]>([]);
+
+  function handleDragEnd(e: DragEndEvent) {
+    const { active, over } = e;
+    if (over !== null && active.id !== over.id) {
+      setLinks((links) => {
+        const oldIndex = links.findIndex((link) => link.id === active.id);
+        const newIndex = links.findIndex((link) => link.id === over.id);
+        return arrayMove(links, oldIndex, newIndex);
+      });
+    }
+  }
+
+  const sensors = useSensors(useSensor(PointerSensor));
 
   useEffect(() => {
     const loadLinks = async () => {
@@ -88,17 +116,27 @@ const Dashboard: NextPage = () => {
             {!links.length ? (
               <p className="text-center">You have no links</p>
             ) : (
-              links.map(({ id, title, url }) => {
-                return (
-                  <DashboardLink
-                    key={id}
-                    id={id}
-                    title={title}
-                    url={url}
-                    setLinks={setLinks}
-                  />
-                );
-              })
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+                modifiers={[restrictToVerticalAxis]}
+              >
+                <SortableContext
+                  items={links}
+                  strategy={verticalListSortingStrategy}
+                >
+                  {links.map(({ id, title, url }) => (
+                    <DashboardLink
+                      key={id}
+                      id={id}
+                      title={title}
+                      url={url}
+                      setLinks={setLinks}
+                    />
+                  ))}
+                </SortableContext>
+              </DndContext>
             )}
           </div>
         )}
@@ -129,8 +167,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-
-  // get other page props here if I dont want to do client side fetch
 
   return {
     props: {

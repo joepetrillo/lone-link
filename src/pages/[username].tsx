@@ -42,12 +42,12 @@ const PublicUserPage: NextPage<PublicUserPageProps> = ({ user, links }) => {
         </div>
       ) : (
         <main className="min-h-screen flex flex-col justify-center items-center gap-2">
-          <p>This page does not exist.</p>
+          <p>This page does not exist</p>
           <p>
             <Link href="/auth/signin" className="underline">
               Sign up
             </Link>{" "}
-            to claim it now.
+            to claim it now
           </p>
         </main>
       )}

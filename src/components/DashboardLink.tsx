@@ -1,23 +1,36 @@
 import { Dispatch, SetStateAction, useState } from "react";
-
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import Spinner from "./Spinner";
-
-interface DashboardLinkData {
-  id: string;
-  title: string;
-  url: string;
-}
 
 interface DashboardLinkProps {
   id: string;
   title: string;
   url: string;
-  setLinks: Dispatch<SetStateAction<DashboardLinkData[]>>;
+  setLinks: Dispatch<
+    SetStateAction<Array<{ id: string; title: string; url: string }>>
+  >;
 }
 
 const DashboardLink = ({ id, title, url, setLinks }: DashboardLinkProps) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    setActivatorNodeRef,
+  } = useSortable({
+    id: id,
+    disabled: loading,
+  });
+
+  const dndStyle = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
 
   // delete link and update list
   async function handleDelete() {
@@ -50,18 +63,40 @@ const DashboardLink = ({ id, title, url, setLinks }: DashboardLinkProps) => {
   }
 
   return (
-    <div className="flex justify-between items-center mb-5 bg-slate-50 border-2 border-slate-200 rounded-md p-4 gap-4">
-      <div>
-        {error && <p className="text-base text-red-500 mb-2">{error}</p>}
-        <p className="break-all mb-2">{title}</p>
-        <a
-          className="underline text-slate-500 break-all text-base"
-          target="_blank"
-          rel="noreferrer"
-          href={url}
+    <div
+      className="flex justify-between items-center mb-5 bg-slate-50 border-2 border-slate-200 rounded-md p-4 pl-2 gap-4"
+      ref={setNodeRef}
+      style={dndStyle}
+    >
+      {error && <p className="text-base text-red-500 mb-2">{error}</p>}
+      <div className="flex items-center gap-2">
+        <div
+          className="p-2 touch-none"
+          ref={setActivatorNodeRef}
+          {...listeners}
+          {...attributes}
         >
-          {url}
-        </a>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            width="16"
+            height="16"
+            className="h-6 w-6"
+          >
+            <path d="M10 13a1 1 0 110-2 1 1 0 010 2zm0-4a1 1 0 110-2 1 1 0 010 2zm-4 4a1 1 0 110-2 1 1 0 010 2zm5-9a1 1 0 11-2 0 1 1 0 012 0zM7 8a1 1 0 11-2 0 1 1 0 012 0zM6 5a1 1 0 110-2 1 1 0 010 2z"></path>
+          </svg>
+        </div>
+        <div>
+          <p className="break-all mb-2">{title}</p>
+          <a
+            className="underline text-slate-500 break-all text-base"
+            target="_blank"
+            rel="noreferrer"
+            href={url}
+          >
+            {url}
+          </a>
+        </div>
       </div>
       {loading ? (
         <Spinner />
@@ -74,7 +109,7 @@ const DashboardLink = ({ id, title, url, setLinks }: DashboardLinkProps) => {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="w-7 h-7"
+            className="w-6 h-6"
           >
             <path
               fillRule="evenodd"

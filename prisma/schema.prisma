@@ -39,5 +39,6 @@ model Link {
     userId String
     title  String
     url    String
+    // position Int
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
