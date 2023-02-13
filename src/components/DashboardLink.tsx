@@ -38,7 +38,7 @@ const DashboardLink = ({
     setActivatorNodeRef,
   } = useSortable({
     id: id,
-    disabled: reorderLoading,
+    disabled: reorderLoading || deleteLoading,
   });
 
   const dndStyle = {

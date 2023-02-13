@@ -20,7 +20,7 @@ const getLinks = async (userId: string) => {
     return row.links as unknown as Link[];
   } catch (error) {
     // user not found
-    throw new Error("The requested user does not exist and has no links", {
+    throw new Error("The requested user has no links", {
       cause: error,
     });
   }
