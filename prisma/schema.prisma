@@ -7,7 +7,6 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-// Necessary for Next auth
 model Session {
     id           String   @id @default(cuid())
     sessionToken String   @unique
@@ -35,10 +34,7 @@ model VerificationToken {
 }
 
 model Link {
-    id     String @id @default(cuid())
-    userId String
-    title  String
-    url    String
-    // position Int
+    userId String @id
+    links  Json
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

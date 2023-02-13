@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import type { GetServerSideProps } from "next";
-import Spinner from "../../components/Spinner";
+import Spinner from "../../components/icons/Spinner";
 import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../api/auth/[...nextauth]";
 import { useRouter } from "next/router";
@@ -77,12 +77,12 @@ const VerifyEmail: NextPageWithLayout = () => {
 
   return (
     <>
-      <h1 className="text-6xl md:text-7xl font-extrabold text-center mb-10">
+      <h1 className="mb-10 text-center text-6xl font-extrabold md:text-7xl">
         Almost Done
       </h1>
 
-      <div className="min-h-[180px] flex justify-center items-center flex-col gap-5 mb-10">
-        {error && <p className="text-red-500 text-center text-base">{error}</p>}
+      <div className="mb-10 flex min-h-[180px] flex-col items-center justify-center gap-5">
+        {error && <p className="text-center text-base text-red-500">{error}</p>}
         {loading ? (
           <Spinner />
         ) : (
@@ -90,23 +90,24 @@ const VerifyEmail: NextPageWithLayout = () => {
             <p>Enter Desired Username</p>
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col gap-5 justify-center items-center"
+              className="flex flex-col items-center justify-center gap-5"
             >
-              <div className="rounded-md p-3 bg-slate-200 border-2 border-slate-300 max-w-[278.33px]">
+              <div className="max-w-[278.33px] rounded-md border-2 border-slate-300 bg-slate-200 p-3">
                 <div className="flex items-center">
                   <label htmlFor="username">lone.link/</label>
                   <input
                     id="username"
                     type="text"
-                    className="w-full bg-transparent rounded-md outline-none ml-0.5 pl-0.5 bg-slate-200 hover:bg-slate-300 placeholder:text-slate-500 focus:bg-slate-300"
+                    className="ml-0.5 w-full rounded-md bg-transparent bg-slate-200 pl-0.5 outline-none placeholder:text-slate-500 hover:bg-slate-300 focus:bg-slate-300"
                     placeholder="username"
                     onChange={(e) =>
                       setUsername(e.currentTarget.value.toLowerCase())
                     }
+                    value={username}
                   />
                 </div>
               </div>
-              <button className="rounded-md px-3 py-2 bg-slate-200 hover:bg-slate-300 border-2 border-slate-300 text-center">
+              <button className="rounded-md border-2 border-slate-300 bg-slate-200 px-3 py-2 text-center hover:bg-slate-300">
                 Finish
               </button>
             </form>

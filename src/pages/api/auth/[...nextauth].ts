@@ -16,6 +16,14 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     createUser: async (message) => {
+      // set links to empty array
+      await prisma.link.create({
+        data: {
+          userId: message.user.id,
+          links: [],
+        },
+      });
+
       // set default image
       await prisma.user.update({
         where: {

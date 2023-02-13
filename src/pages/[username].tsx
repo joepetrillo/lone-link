@@ -19,8 +19,8 @@ const PublicUserPage: NextPage<PublicUserPageProps> = ({ user, links }) => {
   return (
     <div className="text-lg text-slate-800">
       {user ? (
-        <div className="px-4 mt-20 mb-20 mx-auto max-w-screen-md ">
-          <div className="flex flex-col items-center justify-center gap-2 mb-10">
+        <div className="mx-auto mt-20 mb-20 max-w-screen-md px-4 ">
+          <div className="mb-10 flex flex-col items-center justify-center gap-2">
             <Image
               width={100}
               height={100}
@@ -41,13 +41,13 @@ const PublicUserPage: NextPage<PublicUserPageProps> = ({ user, links }) => {
           </main>
         </div>
       ) : (
-        <main className="min-h-screen flex flex-col justify-center items-center gap-2">
-          <p>This page does not exist</p>
+        <main className="flex min-h-screen flex-col items-center justify-center gap-2">
+          <p>This user does not exist</p>
           <p>
             <Link href="/auth/signin" className="underline">
               Sign up
             </Link>{" "}
-            to claim it now
+            to claim this page
           </p>
         </main>
       )}
@@ -64,29 +64,43 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   });
 
+  // user not found
   if (!user) {
     return {
       props: {
-        user,
+        user: null,
         links: null,
       },
     };
   }
 
-  const links = await prisma.link.findMany({
+  const links = await prisma.link.findUnique({
     where: {
       userId: user.id,
     },
   });
 
+  // user has no links
+  if (!links) {
+    return {
+      props: {
+        user: { name: user.name, image: user.image },
+        links: [],
+      },
+    };
+  }
+
+  const allLinks = links.links as Array<{
+    id: string;
+    title: string;
+    url: string;
+  }>;
+
   return {
     props: {
       user: { name: user.name, image: user.image },
-      links: links.map((curr) => {
-        return {
-          title: curr.title,
-          url: curr.url,
-        };
+      links: allLinks.map((link) => {
+        return { title: link.title, url: link.url };
       }),
     },
   };
