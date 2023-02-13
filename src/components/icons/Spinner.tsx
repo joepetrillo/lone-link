@@ -1,7 +1,13 @@
-const Spinner = () => {
+const Spinner = ({ small }: { small?: true }) => {
+  let size = "h-9 w-9";
+
+  if (small) {
+    size = "h-7 w-7";
+  }
+
   return (
     <svg
-      className="animate-spin h-9 w-9 text-slate-800 shrink-0"
+      className={`animate-spin ${size} shrink-0 text-slate-800`}
       viewBox="0 0 24 24 "
     >
       <circle

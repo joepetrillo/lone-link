@@ -3,121 +3,195 @@ import { unstable_getServerSession as getServerSession } from "next-auth";
 import { authOptions as nextAuthOptions } from "../auth/[...nextauth]";
 import { prisma } from "../../../server/db/client";
 import z from "zod";
+import { v4 as randomUUID } from "uuid";
 
-function validatePost(body: NextApiRequest["body"]) {
-  const validPostBody = z.object({
-    title: z
-      .string()
-      .regex(/^[a-zA-Z0-9 ]+$/)
-      .min(1)
-      .max(50),
-    url: z.string().url(),
-  });
+type Link = {
+  id: string;
+  title: string;
+  url: string;
+};
 
-  return validPostBody.safeParse(body);
-}
+const getLinks = async (userId: string) => {
+  try {
+    const row = await prisma.link.findUniqueOrThrow({
+      where: { userId },
+    });
+    // user found, return links array
+    return row.links as unknown as Link[];
+  } catch (error) {
+    // user not found
+    throw new Error("The requested user does not exist and has no links", {
+      cause: error,
+    });
+  }
+};
 
-function validateDelete(body: NextApiRequest["body"]) {
-  const validDeleteBody = z.object({
-    id: z.string(),
-  });
-
-  return validDeleteBody.safeParse(body);
-}
+const updateLinks = async (userId: string, links: Link[]) => {
+  try {
+    await prisma.link.update({
+      where: { userId },
+      data: { links },
+    });
+  } catch (error) {
+    // record does not exist, throw error
+    throw new Error("There was an error updating links on the server", {
+      cause: error,
+    });
+  }
+};
 
 const privateLinks = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, nextAuthOptions);
 
+  // user is signed in
   if (session?.user?.id) {
-    switch (req.method) {
-      case "POST":
-        const newLinkValidation = validatePost(req.body);
+    // create a new link
+    if (req.method === "POST") {
+      const reqBody = z.object({
+        title: z
+          .string()
+          .regex(/^[a-zA-Z0-9 ]+$/)
+          .min(1)
+          .max(50),
+        url: z.string().url(),
+      });
 
-        if (!newLinkValidation.success) {
-          res.status(400).json({ error: "Incorrect body shape" });
-          break;
-        }
+      // validate request body
+      try {
+        reqBody.parse(req.body);
+      } catch (error) {
+        return res.status(400).json(error);
+      }
 
-        const newLink = newLinkValidation.data;
+      try {
+        const links = await getLinks(session.user.id);
 
-        const linkCount = await prisma.link.count({
-          where: { userId: session.user.id },
-        });
-
-        if (linkCount >= 5) {
-          res
+        if (links.length >= 5) {
+          return res
             .status(400)
             .json({ error: "You have reached the maximum of 5 links" });
-          break;
         }
 
-        const link = await prisma.link.create({
-          data: {
-            userId: session.user.id,
-            title: newLink.title,
-            url: newLink.url,
-          },
+        links.push({
+          id: randomUUID(),
+          title: req.body.title,
+          url: req.body.url,
         });
 
-        const result = { id: link.id, title: link.title, url: link.url };
+        await updateLinks(session.user.id, links);
 
-        res.status(200).json(result);
+        res.status(200).json(links[links.length - 1]);
+      } catch (error) {
+        if (error instanceof Error) {
+          res.status(500).json({ error: error.message });
+        }
+      }
+    }
+    // get all links
+    else if (req.method === "GET") {
+      try {
+        const links = await getLinks(session.user.id);
+        res.status(200).json(links);
+      } catch (error) {
+        if (error instanceof Error) {
+          res.status(500).json({ error: error.message });
+        }
+      }
+    }
+    // delete a link
+    else if (req.method === "DELETE") {
+      const reqBody = z.object({
+        id: z.string(),
+      });
 
-        break;
+      // validate request body
+      try {
+        reqBody.parse(req.body);
+      } catch (error) {
+        return res.status(400).json(error);
+      }
 
-      case "GET":
-        const links = await prisma.link.findMany({
-          where: {
-            userId: session.user.id,
-          },
-        });
+      try {
+        let links = await getLinks(session.user.id);
 
-        if (links.length === 0) {
-          res.status(200).json(links);
-          return;
+        const deletedLink = links.find((link) => link.id === req.body.id);
+
+        if (!deletedLink) {
+          return res
+            .status(400)
+            .json({ error: "No links matching the given id were found" });
         }
 
-        res.status(200).json(
-          links.map((curr) => {
-            return {
-              id: curr.id,
-              title: curr.title,
-              url: curr.url,
-            };
-          })
+        links = links.filter((link) => link.id !== req.body.id);
+
+        await updateLinks(session.user.id, links);
+
+        res.status(200).json(deletedLink);
+      } catch (error) {
+        if (error instanceof Error) {
+          res.status(500).json({ error: error.message });
+        }
+      }
+    }
+    // update the order of links
+    else if (req.method === "PATCH") {
+      const reqBody = z.object({
+        order: z.string().array(),
+      });
+
+      // validate request body
+      try {
+        reqBody.parse(req.body);
+      } catch (error) {
+        return res.status(400).json(error);
+      }
+
+      try {
+        const links = await getLinks(session.user.id);
+
+        const linkPositions: Record<string, number> = {};
+        req.body.order.forEach(
+          (id: string, index: number) => (linkPositions[id] = index)
         );
 
-        break;
+        const containsAll = (arr1: string[], arr2: string[]) =>
+          arr2.every((arr2Item) => arr1.includes(arr2Item));
 
-      case "DELETE":
-        const deleteLinkValidation = validateDelete(req.body);
+        const sameMembers = (arr1: string[], arr2: string[]) =>
+          containsAll(arr1, arr2) && containsAll(arr2, arr1);
 
-        if (!deleteLinkValidation.success) {
-          res.status(400).json({ error: "Incorrect body shape" });
-          break;
-        }
-
-        const targetedLink = deleteLinkValidation.data;
-
-        try {
-          const deletedLink = await prisma.link.delete({
-            where: { id: targetedLink.id },
+        if (
+          sameMembers(
+            links.map((link) => link.id),
+            req.body.order
+          )
+        ) {
+          // eslint-disable-next-line
+          // @ts-ignore
+          links.sort((a, b) => linkPositions[a.id] - linkPositions[b.id]);
+        } else {
+          res.status(400).json({
+            error:
+              "The user does not own one or more of the link ids requested to be reordered",
           });
-
-          res.status(200).json(deletedLink);
-        } catch (error) {
-          res
-            .status(400)
-            .json({ error: "There was an error while deleting the link" });
         }
 
-        break;
+        await updateLinks(session.user.id, links);
 
-      default:
-        res.status(405).json({ error: "Method not allowed" });
-        break;
+        res.status(200).json(links);
+      } catch (error) {
+        if (error instanceof Error) {
+          res.status(500).json({ error: error.message });
+        }
+      }
     }
-  } else {
+    // requested method not supported
+    else {
+      res.status(405).json({ error: "Method not allowed" });
+    }
+  }
+  // user is not signed in
+  else {
     res.status(400).send({
       error: "You must be signed in to use this endpoint",
     });
